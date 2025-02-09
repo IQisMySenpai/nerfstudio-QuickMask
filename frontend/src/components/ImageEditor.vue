@@ -14,8 +14,6 @@ const {addRectangle} = currentImageStore;
 let startX: number | null = null;
 let startY: number | null = null;
 
-const rerenderHack = ref(false);
-
 forceRerender.value = () => {
   const instance = getCurrentInstance();
   instance?.proxy?.forceUpdate();
