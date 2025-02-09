@@ -8,16 +8,11 @@ const image = ref<HTMLImageElement | null>(null);
 const { width: imageWidth, height: imageHeight } = useElementSize(image);
 
 const currentImageStore = useCurrentImageStore();
-const {canvas, forceRerender} = storeToRefs(currentImageStore);
+const {canvas} = storeToRefs(currentImageStore);
 const {addRectangle} = currentImageStore;
 
 let startX: number | null = null;
 let startY: number | null = null;
-
-forceRerender.value = () => {
-  const instance = getCurrentInstance();
-  instance?.proxy?.forceUpdate();
-}
 
 const startSquare = (event: MouseEvent) => {
   if (!canvas.value) {

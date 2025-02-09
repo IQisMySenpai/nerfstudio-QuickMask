@@ -11,8 +11,8 @@ export interface Rectangle  {
 export const useCurrentImageStore = defineStore('currentImage', () => {
   const rectangles = ref<Rectangle[]>([]);
   const history = ref<Rectangle[]>([]);
+  const justCleared = ref<boolean>(false);
   const canvas = ref<HTMLCanvasElement | null>(null);
-  const forceRerender = ref<(() => void) | null>(null);
 
   function drawRectangle(rectangle: Rectangle) {
     if (!canvas.value) {
@@ -57,6 +57,11 @@ export const useCurrentImageStore = defineStore('currentImage', () => {
     drawAllRectangles();
   }
 
+  function clearRectangles() {
+    justCleared.value = true;
+    clearCanvas();
+  }
+
   function addRectangle(rectangle: Rectangle) {
     rectangles.value.push(rectangle);
     history.value = [];
@@ -68,12 +73,16 @@ export const useCurrentImageStore = defineStore('currentImage', () => {
       return;
     }
 
-    const lastRectangle = rectangles.value.pop();
-    if (!lastRectangle) {
-      return;
-    }
+    if (!justCleared.value) {
+      const lastRectangle = rectangles.value.pop();
+      if (!lastRectangle) {
+        return;
+      }
 
-    history.value.push(lastRectangle);
+      history.value.push(lastRectangle);
+    }
+    justCleared.value = false;
+
     clearAndDrawAllRectangles();
   }
 
@@ -98,6 +107,6 @@ export const useCurrentImageStore = defineStore('currentImage', () => {
     addRectangle,
     undoRectangle,
     redoRectangle,
-    forceRerender
+    clearRectangles
   }
 });

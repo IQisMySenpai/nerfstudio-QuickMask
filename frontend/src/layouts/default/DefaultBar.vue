@@ -4,7 +4,7 @@ import {storeToRefs} from "pinia";
 
 const currentImageStore = useCurrentImageStore();
 const {rectangles, history} = storeToRefs(currentImageStore);
-const {undoRectangle, redoRectangle} = currentImageStore;
+const {undoRectangle, redoRectangle, clearRectangles} = currentImageStore;
 </script>
 
 <template>
@@ -42,6 +42,11 @@ const {undoRectangle, redoRectangle} = currentImageStore;
       density="comfortable"
       :disabled="history.length <= 0"
       @click="redoRectangle"
+    />
+    <v-btn
+      icon="mdi-eraser"
+      density="comfortable"
+      @click="clearRectangles"
     />
   </v-app-bar>
 </template>
