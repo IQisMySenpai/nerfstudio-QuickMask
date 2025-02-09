@@ -11,13 +11,23 @@ const {undoRectangle, redoRectangle} = currentImageStore;
   <v-app-bar
     density="comfortable"
   >
-    <!--image="https://picsum.photos/1920/1080?random"-->
     <v-app-bar-title>
+      <v-avatar
+        size="40"
+        class="mr-2"
+        :rounded="0"
+        border="0"
+      >
+        <v-img
+          src="/logo.png"
+          alt="NS QuickMask Logo"
+        />
+      </v-avatar>
       <router-link
         :to="{ name: 'Home' }"
         class="text-decoration-none text-white"
       >
-        NS QuickMask
+        NerfStudio QuickMask
       </router-link>
     </v-app-bar-title>
     <v-spacer/>
