@@ -3,9 +3,13 @@ import {ref,getCurrentInstance} from "vue";
 import { useElementSize } from '@vueuse/core'
 import {storeToRefs} from "pinia";
 import {useCurrentImageStore} from "@/store/currentImage";
+import {useImageStore} from "@/store/images";
 
 const image = ref<HTMLImageElement | null>(null);
 const { width: imageWidth, height: imageHeight } = useElementSize(image);
+
+const imagesStore = useImageStore();
+const {selected, frames} = storeToRefs(imagesStore);
 
 const currentImageStore = useCurrentImageStore();
 const {canvas} = storeToRefs(currentImageStore);
@@ -32,12 +36,10 @@ const endSquare = (event: MouseEvent) => {
   const endX = event.pageX - rect.left;
   const endY = event.pageY - rect.top;
 
-  addRectangle({
-    x: Math.min(startX, endX),
-    y: Math.min(startY, endY),
-    width: Math.abs(endX - startX),
-    height: Math.abs(endY - startY)
-  });
+  addRectangle(Math.min(startX, endX), Math.min(startY, endY), Math.abs(endX - startX), Math.abs(endY - startY));
+
+  startX = null;
+  startY = null;
 }
 </script>
 
@@ -47,9 +49,16 @@ const endSquare = (event: MouseEvent) => {
   ref="bounding"
 >
   <img
-    src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+    alt="Selected"
+    :src="`/api/image/${selected}`"
     class="bound center"
     ref="image"
+  />
+  <img
+    v-if="frames && frames[selected].has_existing_mask"
+    alt="Selected"
+    :src="`/api/mask/${selected}`"
+    class="bound center"
   />
   <canvas
     ref="canvas"
@@ -63,6 +72,7 @@ const endSquare = (event: MouseEvent) => {
     }"
     @mousedown="startSquare"
     @mouseup="endSquare"
+    @mouseleave="endSquare"
   />
 </div>
 </template>

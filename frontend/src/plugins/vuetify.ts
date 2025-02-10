@@ -20,7 +20,7 @@ export default createVuetify({
       dark: {
         dark: true,
         colors: {
-          primary: colors.orange.lighten3,
+          primary: colors.orange.lighten1,
         }
       }
     }

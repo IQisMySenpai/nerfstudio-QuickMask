@@ -1,6 +1,11 @@
 <script lang="ts" setup>
 import {useCurrentImageStore} from "@/store/currentImage";
 import {storeToRefs} from "pinia";
+import {useImageStore} from "@/store/images";
+
+const imagesStore = useImageStore();
+const {selected, frames} = storeToRefs(imagesStore);
+const {removeExistingMask} = imagesStore;
 
 const currentImageStore = useCurrentImageStore();
 const {rectangles, history} = storeToRefs(currentImageStore);
@@ -32,6 +37,14 @@ const {undoRectangle, redoRectangle, clearRectangles} = currentImageStore;
     </v-app-bar-title>
     <v-spacer/>
     <v-btn
+      icon="mdi-filter-remove"
+      density="comfortable"
+      v-if="frames"
+      :disabled="!frames[selected].has_existing_mask"
+      @click="removeExistingMask"
+      class="mr-4"
+    />
+    <v-btn
       icon="mdi-undo"
       density="comfortable"
       :disabled="rectangles.length <= 0"
@@ -42,8 +55,10 @@ const {undoRectangle, redoRectangle, clearRectangles} = currentImageStore;
       density="comfortable"
       :disabled="history.length <= 0"
       @click="redoRectangle"
+      class="mr-4"
     />
     <v-btn
+      class="mr-2"
       icon="mdi-eraser"
       density="comfortable"
       @click="clearRectangles"
