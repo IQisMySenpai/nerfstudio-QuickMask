@@ -8,7 +8,7 @@ const imagesStore = useImageStore();
 const {frames, dataset_path} = storeToRefs(imagesStore);
 const {setDataset} = imagesStore;
 
-const current_path = ref<string>("/home/jannick/Projects/BachelorThesis/nerfstudio/data/nerfstudio/test");
+const current_path = ref<string>("");
 const makeSafetyCopy = ref<boolean>(true);
 </script>
 
