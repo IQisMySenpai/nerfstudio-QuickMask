@@ -1,4 +1,4 @@
-# <img src="frontend/public/logo.png" alt="Nerfstudio QuickMask Logo" width="30"> Nerfstudio QuickMask
+# Nerfstudio QuickMask <img src="frontend/public/logo.png" alt="Nerfstudio QuickMask Logo" width="40">
 
 **Nerfstudio QuickMask** is an tool designed to quickly generate masks for your Nerfstudio dataset using rectangles. It simplifies the masking process compared to other methods, making it ideal for testing new datasets.
 
