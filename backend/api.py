@@ -1,5 +1,7 @@
 import json
 import math
+from http.client import responses
+
 from pydantic import BaseModel
 from fastapi import FastAPI
 import os
@@ -162,7 +164,9 @@ async def get_image(index: int):
     if index < 0 or index >= api_app.loaded_dataset['framecount']:
         return {'error': 'Index out of bounds'}
 
-    return FileResponse(os.path.join(api_app.nerfstudio_dataset_path, api_app.loaded_dataset['frames'][index]['file_path']))
+    response = FileResponse(os.path.join(api_app.nerfstudio_dataset_path, api_app.loaded_dataset['frames'][index]['image_path']))
+    response.headers.update({'Cache-Control': 'no-cache'})
+    return response
 
 @api_app.get('/mask/{index}')
 async def get_mask(index: int):
@@ -200,7 +204,10 @@ async def get_mask(index: int):
     imgio.seek(0)
     image.close()
     result.close()
-    return StreamingResponse(media_type="image/png", content=imgio)
+
+    response = StreamingResponse(media_type="image/png", content=imgio)
+    response.headers.update({'Cache-Control': 'no-cache'})
+    return response
 
 class Rectangle(BaseModel):
     x: float
@@ -261,8 +268,9 @@ async def generate_mask(index: int, request: GenerateMaskRequest):
 
     # Update the dataset and transforms.json
     frame = api_app.loaded_dataset['frames'][index]
-    frame['quickmask_path'] = os.path.relpath(mask_path, api_app.nerfstudio_dataset_path)
-    frame['reference']['mask_path'] = frame['quickmask_path']
+    frame['mask_path'] = os.path.relpath(mask_path, api_app.nerfstudio_dataset_path)
+    frame['quickmask_path'] = frame['mask_path']
+    frame['reference']['mask_path'] = frame['mask_path']
 
     with open(os.path.join(api_app.nerfstudio_dataset_path, 'transforms.json'), 'r') as f:
         transform = json.load(f)
