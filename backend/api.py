@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 import numpy as np
 import io
 import copy
+import uvicorn
 
 app = FastAPI()
 
@@ -277,3 +278,6 @@ async def generate_mask(index: int, request: GenerateMaskRequest):
 app.mount("/api", api_app)
 
 app.mount('/', StaticFiles(directory=os.path.join(os.path.dirname(os.path.abspath(__file__)), '../frontend/dist'), html=True))
+
+if __name__ == '__main__':
+    uvicorn.run(app, host="0.0.0.0", port=8000)
